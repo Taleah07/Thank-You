@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Interactive Thank You Card</title>
+    <!-- Include Canvas Confetti library from CDN -->
+    <script src="https://jsdelivr.net"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            /* Prevents rubber-banding bounce behavior on mobile devices */
+            overflow: hidden; 
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            perspective: 1000px; /* Essential for 3D flip effect */
+            user-select: none;
+            -webkit-user-select: none; /* Safari mobile support */
+        }
+
+        /* Responsive Card Container */
+        .card-container {
+            width: 90%;          /* Fluid percentage width for small devices */
+            max-width: 400px;    /* Caps the layout size safely on large monitors */
+            height: 250px;       /* Uniform height across devices */
+            cursor: pointer;
+            /* Ensures snappy taps and eliminates click delays on mobile platforms */
+            touch-action: manipulation; 
+            -webkit-tap-highlight-color: transparent; /* Removes blue tap overlay on mobile Safari */
+        }
+
+        /* The moving card element */
+        .card {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+            border-radius: 16px;
+        }
+
+        /* Flip Class triggered by JavaScript */
+        .card.flipped {
+            transform: rotateY(180deg);
+        }
+
+        /* Front and Back side shared rules */
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden; /* Safari mobile support */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-radius: 16px;
+            background: rgb(255, 162, 239);
+            padding: 24px;
+            box-sizing: border-box;
+        }
+
+        /* Front Side Styling */
+        .card-front h1 {
+            color: #000000;
+            font-size: 2.2rem;
+            margin: 0;
+            text-align: center;
+        }
+        .card-front p {
+            color: #000000;
+            font-size: 0.95rem;
+            margin: 12px 0 0 0;
+            text-align: center;
+        }
+
+        /* Back Side Styling */
+        .card-back {
+            transform: rotateY(180deg); /* Pre-flips the back face */
+            background: #ffffff;
+            border: 2px dashed #bf34db;
+        }
+        .card-back h2 {
+            color: #781896;
+            font-size: 1.5rem;
+            margin: 0 0 8px 0;
+            text-align: center;
+        }
+        .card-back p {
+            color: #000000;
+            font-size: 1.05rem;
+            text-align: center;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        /* Media queries to adjust font scalability on extremely small devices */
+        @media (max-width: 360px) {
+            .card-front h1 { font-size: 1.8rem; }
+            .card-back p { font-size: 0.95rem; }
+            .card-container { height: 220px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card-container" onclick="flipCard()">
+        <div class="card" id="thankYouCard">
+            <!-- Front Face -->
+            <div class="card-front">
+                <h1>To Everyone</h1>
+                <p>Tap to turn over</p>
+            </div>
+            <!-- Back Face -->
+            <div class="card-back">
+                <h2>Thank you</h2>
+                <p>Just wanted to say thank you to everyone! You were always so nice to me. I'm glad I was a part of this team. I learnt a lot from you all and had a good 12 Months...</p>
+                <h3>From: Taleah.G</h3>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function flipCard() {
+            const card = document.getElementById('thankYouCard');
+            const isFlipped = card.classList.contains('flipped');
+            
+            // Toggle the flip class seamlessly across mouse-clicks and mobile touch taps
+            card.classList.toggle('flipped');
+
+            // Fire confetti only when flipping to reveal the back message
+            if (!isFlipped) {
+                setTimeout(() => {
+                    confetti({
+                        particleCount: 100,
+                        spread: 75,
+                        origin: { y: 0.6 }
+                    });
+                }, 150); // Synced perfectly to mid-rotation
+            }
+        }
+    </script>
+</body>
+</html>
